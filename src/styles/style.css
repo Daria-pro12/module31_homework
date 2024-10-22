@@ -1,0 +1,224 @@
+body {
+  margin: 0;
+  font-family: Roboto, sans-serif;
+}
+
+#app-login-btn {
+  width: 160px;
+}
+
+.bg-head,
+.kanban-footer {
+  background-color: #0067A3;
+}
+
+.navbar-brand {
+  font-size: 28px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.contain {
+  background-color: #0079BF;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-withoutAuth {
+  background-color: white;
+  height: 85vh;
+  margin: 30px;
+  padding: 20px 30px;
+  font-size: 24px;
+  border-radius: 5px;
+}
+
+.content-auth {
+  margin: 30px;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+#user-info {
+  display: flex;
+  align-items: center;
+  color: white;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.user-greeting {
+  margin-right: 10px;
+}
+
+.dropdown-menu {
+  border-radius: 8px;
+  right: 0px;
+  top: 35px;
+}
+
+.dropdown-item:hover {
+  background-color: #005f8d;
+  color: white;
+}
+
+.dropdown-toggle {
+  background: url('./assets/arrow-down.svg') no-repeat right center;
+  border: 0;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+.dropdown-toggle[aria-expanded="true"] {
+  background: url('./assets/arrow-up.svg') no-repeat right center;
+}
+
+.dropdown-toggle:hover,
+.dropdown-toggle[aria-expanded="true"]:hover,
+.dropdown-toggle:focus,
+.dropdown-toggle[aria-expanded="true"]:focus {
+  background-color: transparent;
+  box-shadow: none !important;
+}
+
+.img-user {
+  background-color: white;
+  border-radius: 50%;
+}
+
+.kanban-column,
+#user-management-form {
+  display: flex;
+  flex-direction: column;
+  background-color: #EBECF0;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 18px;
+  line-height: 21px;
+  gap: 15px;
+  flex: 1;
+}
+
+.kanban-body {
+  min-height: 100px;
+}
+
+.input,
+.input:focus {
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid #005f8d;
+  padding: 8px;
+}
+
+.task-item {
+  background-color: white;
+  border-radius: 5px;
+  margin: 15px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-text {
+  word-wrap: break-word;
+  vertical-align: middle;
+  margin: 8px;
+  display: inline-block;
+}
+
+.btn-delete,
+.btn-edit {
+  border: none;
+  background-color: transparent;
+}
+
+.btn-kanban,
+.add-user {
+  border: none;
+  text-align: left;
+  color: black;
+  padding: 5px;
+  width: 95px;
+  margin-top: auto;
+}
+
+.btn-kanban:disabled {
+  color: #5E6C84;
+}
+
+.btn-kanban:hover {
+  background-color: white;
+  color: #5E6C84;
+  border-radius: 5px;
+}
+
+.btn-submit {
+  text-align: center;
+}
+
+.btn-submit:hover,
+.add-user:hover {
+  background-color: #0079BF;
+  color: white;
+}
+
+.kanban-footer {
+  color: white;
+  font-size: 18px;
+  line-height: 21px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.tasks-count {
+  display: flex;
+  gap: 35px;
+}
+
+.dropdown-progress,
+.dropdown-finished {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.user-management-title {
+  color: white;
+  margin-bottom: 15px;
+}
+
+.user-list-item {
+  font-weight: 600;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 600px) {
+
+  .navbar-brand,
+  .user-greeting,
+  .kanban-footer {
+    display: none;
+  }
+
+  .navbar-toggler {
+    margin-left: auto;
+  }
+
+  .content-withoutAuth {
+    font-size: 16px;
+  }
+
+  .content-auth {
+    margin: 0;
+  }
+}
