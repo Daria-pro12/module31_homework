@@ -20,7 +20,6 @@ const contentWithoutAuth = document.querySelector(".content-withoutAuth");
 const contentAuth = document.querySelector(".content-auth");
 const footer = document.querySelector(".kanban-footer");
 
-
 function showHeaderContent(login) {
   userGreeting.textContent = `Здравствуйте, ${login}`;
   userInfo.classList.remove("d-none");
@@ -45,6 +44,25 @@ function toggleMenu() {
   dropdownMenu.style.display = isExpanded ? 'none' : 'block';
 }
 
+function showUserTemplate() {
+  document.querySelector(".content").innerHTML = taskFieldTemplate;
+  footer.classList.remove("d-none");
+  loadUserTasks();
+  addNewTask(document);
+  modifyTasks(document);
+  addTaskToProgress(document);
+  addTaskToFinished(document);
+  loadTasksToDropdown();
+  updateButtonsState();
+  countTasks();
+}
+
+function showAdminTemplate() {
+  document.querySelector(".content").innerHTML = adminTemplate;
+  footer.classList.add("d-none");
+  userManager();
+}
+
 generateTestUser(User);
 
 loginForm.addEventListener("submit", function (e) {
@@ -57,20 +75,9 @@ loginForm.addEventListener("submit", function (e) {
     localStorage.setItem('currentUser', JSON.stringify([{ login, password }]));
     showHeaderContent(login);
     if (appState.isAdmin == true) {
-      document.querySelector(".content").innerHTML = adminTemplate;
-      footer.classList.add("d-none");
-      userManager();
+      showAdminTemplate();
     } else {
-      document.querySelector(".content").innerHTML = taskFieldTemplate;
-      footer.classList.remove("d-none");
-      loadUserTasks();
-      addNewTask(document);
-      modifyTasks(document);
-      addTaskToProgress(document);
-      addTaskToFinished(document);
-      loadTasksToDropdown();
-      updateButtonsState();
-      countTasks();
+      showUserTemplate();
     }
   } else {
     alert("Доступ запрещен!");
@@ -89,4 +96,22 @@ logoutBtn.addEventListener("click", function () {
   loginForm.querySelector("input[name='login']").value = '';
   loginForm.querySelector("input[name='password']").value = '';
   contentWithoutAuth.innerHTML = "Please Sign In to see your tasks!";
+  document.querySelector(".name-user").innerHTML = "";
+  document.querySelector(".ready-lenght").innerHTML = "";
+  document.querySelector(".finished-lenght").innerHTML = "";
+  document.querySelector(".year").innerHTML = "";
 });
+
+// Восстановление состояния пользователя при перезагрузке страницы
+const storedUser = JSON.parse(localStorage.getItem("currentUser"));
+if (storedUser) {
+  const { login, password } = storedUser[0];
+  if (authUser(login, password)) {
+    showHeaderContent(login);
+    if (appState.isAdmin) {
+      showAdminTemplate();
+    } else {
+      showUserTemplate();
+    }
+  }
+}

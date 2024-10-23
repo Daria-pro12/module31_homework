@@ -1,6 +1,7 @@
 import { getFromStorage } from "../utils";
 import { User } from "../models/User";
 import { appState } from "../app";
+import { Task } from "../models/Task";
 
 export const userManager = function () {
   const userForm = document.querySelector("#user-management-form");
@@ -57,6 +58,14 @@ export const userManager = function () {
     }
 
     let users = getFromStorage("users") || [];
+    const userToRemove = users.find(user => user.login === login);
+
+    if (userToRemove) {
+        // Удаляем все задачи, связанные с удаляемым пользователем
+        const userTasks = Task.getUserTasks(userToRemove.id);
+        userTasks.forEach(task => Task.delete(task));
+    }
+
     users = users.filter((user) => user.login !== login);
     localStorage.setItem("users", JSON.stringify(users));
     updateUsersList(users);

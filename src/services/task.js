@@ -5,12 +5,24 @@ import { Task } from "../models/Task";
 const createTaskElement = (task) => {
   const newTask = document.createElement("div");
   newTask.classList.add("task-item");
+  newTask.setAttribute("draggable", "true"); // Добавляем атрибут draggable
   newTask.innerHTML = `
     <p class="task-text">${task.description}</p>
     <div class="btn-modify">
     <button class="btn-edit">&#128393</button>
     <button class="btn-delete">&#10008;</button>
     </div>`;
+  // Добавляем обработчик события dragstart 
+  newTask.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("text/plain", task.description); // Сохраняем описание задачи
+    e.currentTarget.classList.add("dragging"); // Добавляем класс для визуализации перетаскивания
+  });
+
+  // Добавляем обработчик события dragend 
+  newTask.addEventListener("dragend", (e) => {
+    e.currentTarget.classList.remove("dragging"); // Убираем класс при завершении перетаскивания
+  });
+
   return newTask;
 };
 
@@ -48,6 +60,7 @@ export const loadUserTasks = function () {
       taskListFinished.appendChild(taskElement);
     }
     updateButtonsState();
+    setupDragAndDrop();
   });
 };
 
@@ -190,18 +203,18 @@ const addTaskNewState = function (buttonSelector, dropdownSelector, newState, ka
       const taskToMove = tasks.find(task => task.description === selectedTaskDescription);
 
       if (taskToMove) {
-        taskToMove.state = newState; 
-        Task.delete(taskToMove); 
-        loadUserTasks(); 
+        taskToMove.state = newState;
+        Task.delete(taskToMove);
+        loadUserTasks();
 
-        document.querySelector(kanbanSelector).appendChild(createTaskElement(taskToMove)); 
-        Task.save(taskToMove); 
-        dropdown.querySelector(`option[value="${selectedTaskDescription}"]`).remove(); 
-        dropdown.value = ""; 
-        dropdown.classList.add("d-none"); 
-        loadTasksToDropdown(); 
-        updateButtonsState(); 
-        countTasks(); 
+        document.querySelector(kanbanSelector).appendChild(createTaskElement(taskToMove));
+        Task.save(taskToMove);
+        dropdown.querySelector(`option[value="${selectedTaskDescription}"]`).remove();
+        dropdown.value = "";
+        dropdown.classList.add("d-none");
+        loadTasksToDropdown();
+        updateButtonsState();
+        countTasks();
       }
     }
   });
@@ -215,6 +228,39 @@ export const addTaskToProgress = function (document) {
 export const addTaskToFinished = function (document) {
   addTaskNewState(".btn-finished", ".dropdown-finished", "finished", ".kanban-finished");
 };
+
+
+// Функция для обработки перетаскивания задач между колонками
+const enableDropZone = (dropZoneSelector, newState) => {
+  const dropZone = document.querySelector(dropZoneSelector);
+
+  dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault(); 
+  });
+
+  dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const taskDescription = e.dataTransfer.getData("text/plain");
+    const tasks = Task.getUserTasks(appState.currentUser.id);
+    const taskToMove = tasks.find(task => task.description === taskDescription);
+
+    if (taskToMove) {
+      taskToMove.state = newState; 
+      Task.delete(taskToMove);
+      Task.save(taskToMove); 
+      loadUserTasks(); 
+      countTasks();
+    }
+  });
+};
+
+// Используем функцию enableDropZone для каждой колонки задач
+export const setupDragAndDrop = function () {
+  enableDropZone(".kanban-ready", "ready");
+  enableDropZone(".kanban-progress", "progress");
+  enableDropZone(".kanban-finished", "finished");
+};
+
 
 //подсчет активных и завершенных задач в футер
 export const countTasks = function () {
