@@ -89,6 +89,7 @@ export const addNewTask = function (document) {
         submitBtn.classList.add("d-none");
         addBtn.classList.remove("d-none");
         updateButtonsState();
+        setupDragAndDrop();
         countTasks();
       }
     }
